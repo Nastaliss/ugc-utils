@@ -6,6 +6,8 @@ import requests
 from bs4 import BeautifulSoup, element
 import re
 
+import csv
+
 import logging
 
 # ADDRESS_SANITIZE_REGEX =
@@ -85,7 +87,7 @@ class Address(object):
 
     def find_geolocation(self):
         try:
-            self.x, self.y = self._get_x_y_from_ban_api_with_both_city_and_post_codes(
+            self.lon, self.lat = self._get_coordinates_from_ban_api_with_both_city_and_post_codes(
                 self.address_1)
             Logger.info("Geolocation succesfully obtained")
             return
@@ -97,7 +99,7 @@ class Address(object):
         Logger.warning(
             f"Address not found {self._build_address(self.address_1)}, falling back to address 2")
         try:
-            self.x, self.y = self._get_x_y_from_ban_api_with_both_city_and_post_codes(
+            self.lon, self.lat = self._get_coordinates_from_ban_api_with_both_city_and_post_codes(
                 self.address_2)
             Logger.info("Geolocation succesfully obtained (with address 2)")
         except AddressNotFoundException:
@@ -108,19 +110,19 @@ class Address(object):
         return (address_dict["special_place"] if address_dict["special_place"]
                 else f"{address_dict['number']} {address_dict['street']}")
 
-    def _get_x_y_from_ban_api_with_both_city_and_post_codes(self, address_dict: dict):
+    def _get_coordinates_from_ban_api_with_both_city_and_post_codes(self, address_dict: dict):
         try:
-            return self._get_x_y_from_ban_api(address_dict, use_citycode=False, use_postcode=True)
+            return self._get_coordinates_from_ban_api(address_dict, use_citycode=False, use_postcode=True)
         except AddressNotFoundException:
             Logger.warning(
                 f"Address not found using postcode, trying city code")
         try:
-            return self._get_x_y_from_ban_api(address_dict, use_citycode=True, use_postcode=False)
+            return self._get_coordinates_from_ban_api(address_dict, use_citycode=True, use_postcode=False)
         except AddressNotFoundException as e:
             Logger.warning(
                 f"Address not found using city code, trying with no filter")
         try:
-            a = self._get_x_y_from_ban_api(
+            a = self._get_coordinates_from_ban_api(
                 address_dict, use_citycode=False, use_postcode=False)
             return a
         except AddressNotFoundException as e:
@@ -128,7 +130,7 @@ class Address(object):
                 f"Address wasn't found at all in the whole country")
             raise e
 
-    def _get_x_y_from_ban_api(self, address_dict: dict, use_postcode=True, use_citycode=False, delay_seconds=0.1):
+    def _get_coordinates_from_ban_api(self, address_dict: dict, use_postcode=True, use_citycode=False, delay_seconds=0.1):
         if use_postcode and use_citycode:
             raise ArgumentError(
                 "Both use_post_code and use_city_code cannot be true")
@@ -147,9 +149,9 @@ class Address(object):
         if not len(resp.json()["features"]):
             raise AddressNotFoundException()
 
-        properties = resp.json()["features"][0]["properties"]
+        coordinates = resp.json()["features"][0]["geometry"]["coordinates"]
 
-        return properties["x"], properties["y"]
+        return coordinates
 
 
 class Theatre(object):
@@ -164,6 +166,13 @@ class Theatre(object):
 
         self.address.find_geolocation()
 
+    def write_to_csv(self, csv_writer: csv.DictWriter):
+        csv_writer.writerow({
+            "name": self.name,
+            "lat": self.address.lat,
+            "lon": self.address.lon,
+        })
+
 
 class TheatreType(object):
     def __init__(self, html: element.Tag) -> None:
@@ -173,6 +182,14 @@ class TheatreType(object):
             "div", {"class": "row collapse"})
         self.theatres = [Theatre(theatre_html)
                          for theatre_html in theatre_parent.children if theatre_html != ' ']
+
+    def write_to_csv(self, csv_writer: csv.DictWriter):
+        for theatre in self.theatres:
+            theatre.write_to_csv(csv_writer)
+
+
+class IsBelgiumException(BaseException):
+    pass
 
 
 class Region(object):
@@ -184,9 +201,9 @@ class Region(object):
         self.theatre_types = [TheatreType(theatre_type_html) for theatre_type_html in self.html.find_all(
             "li", {"class": "accordion-item"})]
 
-
-class IsBelgiumException(BaseException):
-    pass
+    def write_to_csv(self, csvDictWriter: csv.DictWriter):
+        for theatre_type in self.theatre_types:
+            theatre_type.write_to_csv(csvDictWriter)
 
 
 if __name__ == "__main__":
@@ -195,8 +212,16 @@ if __name__ == "__main__":
     theatre_list_request.raise_for_status()
 
     html = BeautifulSoup(theatre_list_request.text, features="html.parser")
-    try:
-        regions = [Region(region_html) for region_html in html.find_all(
-            "div", {"class": "row group-accordion"})]
-    except IsBelgiumException:  # Shit happens
-        pass
+    with open("output.csv", "w") as file:
+        field_names = ["name", "lat", "lon"]
+        csv_dict_writer = csv.DictWriter(file, field_names)
+        csv_dict_writer.writeheader()
+
+        for region_html in html.find_all(
+                "div", {"class": "row group-accordion"}):
+            try:
+                region = Region(region_html)
+                region.write_to_csv(csv_dict_writer)
+
+            except IsBelgiumException:  # Shit happens
+                pass
