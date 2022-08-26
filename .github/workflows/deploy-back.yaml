@@ -3,8 +3,10 @@ on:
   push:
     branches:
       - main
-    # paths:
-    # - 'back-end/**'
+    paths:
+    - 'back-end/**'
+    - '.github/workflows/deploy-back.yaml'
+    - 'CI/deploy-back.sh'
 jobs:
   deploy-back:
     defaults:

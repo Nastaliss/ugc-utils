@@ -5,6 +5,8 @@ on:
       - main
     paths:
     - 'front-end/**'
+    - '.github/workflows/deploy-front.yaml'
+    - 'CI/deploy-front.sh'
 jobs:
   deploy-front:
     defaults:
