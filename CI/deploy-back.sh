@@ -25,7 +25,7 @@ ssh -o strictHostKeyChecking=no -o PubkeyAuthentication=yes "$CONNECTION" "$REMO
 echo -e "Synchronizing files ..."
 scp -o stricthostkeychecking=no -o PubkeyAuthentication=yes -r $OUT/* "$CONNECTION:$REMOTE_PATH"
 
-RUN_CMD="cd $REMOTE_PATH && docker build -t ugc-back . && docker kill ugc-api || true && docker run -d -p 5000:5000 --name ugc-api --network host ugc-back"
+RUN_CMD="cd $REMOTE_PATH && docker build -t ugc-back-candidate . && docker kill ugc-api || true && docker tag ugc-back-candidate ugc-back && docker run -d -p 5000:5000 --name ugc-api --network host ugc-back"
 echo -e "Deployed, building and starting"
 ssh -o strictHostKeyChecking=no -o PubkeyAuthentication=yes "$CONNECTION" "$RUN_CMD"
 
