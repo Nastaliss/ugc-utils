@@ -5,12 +5,12 @@ import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 
 export const Map = () => {
 
-    const [isLoaded, setIsLoaded] = useState(false);
+    const [_isLoaded, setIsLoaded] = useState(false);
     const [theatres, setTheatres] = useState([])
 
     useEffect(() => {
         console.log("here")
-        axios.get("http://localhost:5000/theatres").then((r) => {
+        axios.get(`${process.env.REACT_APP_API_URL}/theatres`).then((r) => {
             console.log(r);
             setTheatres(r.data);
             setIsLoaded(true);

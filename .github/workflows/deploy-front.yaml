@@ -1,0 +1,14 @@
+name: Deploy front
+on:
+  push:
+    branches:
+      - main
+    paths:
+    - 'front-end/**'
+jobs:
+  deploy-code:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - run: ./CI/prepare-ssh-keys.sh
+    - run: ./CI/deploy-front.sh
