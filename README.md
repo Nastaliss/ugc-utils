@@ -6,7 +6,7 @@ _Ce repository a pour but de fournir des outils pour faciliter l'accès aux info
 
 Les cinémas sont présentés à [cette adresse](https://www.ugc.fr/cinemas-acceptant-ui.html) par UGC. Il n'est pas facile de trouver le cinéma le plus proche de soi.
 
-Une carte est disponible à [cette url](work-in-progress)
+Une carte est disponible à [cette url](http://ugc.bruhie.re/)
 
 ### Fonctionnement
 
