@@ -24,6 +24,6 @@ REMOVE_CMD="mkdir -p $REMOTE_PATH && cd $REMOTE_PATH && rm -rf *"
 ssh -o strictHostKeyChecking=no -o PubkeyAuthentication=yes $CONNECTION "$REMOVE_CMD"
 
 echo -e "Synchronizing files ..."
-scp -o stricthostkeychecking=no -o PubkeyAuthentication=yes -r "$OUT/*" "$CONNECTION:$REMOTE_PATH"
+scp -o stricthostkeychecking=no -o PubkeyAuthentication=yes -r $OUT/* "$CONNECTION:$REMOTE_PATH"
 
 echo -e "Deployed"
