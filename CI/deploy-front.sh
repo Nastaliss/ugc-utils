@@ -15,6 +15,7 @@ REMOTE_PATH="/var/www/ugc.bruhie.re/"
 OUT="./build"
 CONNECTION="root@$SERVER_IP"
 
+npm install --no-optional
 npm run build
 
 echo -e "Removing remote folder ..."

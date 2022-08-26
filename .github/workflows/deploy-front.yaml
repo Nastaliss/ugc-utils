@@ -6,7 +6,7 @@ on:
     # paths:
     # - 'front-end/**'
 jobs:
-  deploy-frpmt:
+  deploy-front:
     defaults:
       run:
         working-directory:

@@ -7,11 +7,11 @@ on:
     # - 'back-end/**'
 jobs:
   deploy-back:
-    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory:
           'back-end'
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     # - run: ./CI/prepare-ssh-keys.sh
