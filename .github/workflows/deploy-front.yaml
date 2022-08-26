@@ -11,4 +11,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - run: ./CI/prepare-ssh-keys.sh
+      env:
+        SERVER_PRIVATE_SSH_KEY: ${{ secrets.SERVER_PRIVATE_SSH_KEY }}
+        SERVER_IP: ${{ secrets.SERVER_IP }}
     - run: ./CI/deploy-front.sh
+      env:
+        SERVER_IP: ${{ secrets.SERVER_IP }}
