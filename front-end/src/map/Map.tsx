@@ -5,7 +5,7 @@ import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 
 export const Map = () => {
 
-    const [_isLoaded, setIsLoaded] = useState(false);
+    const [, setIsLoaded] = useState(false);
     const [theatres, setTheatres] = useState([])
 
     useEffect(() => {
