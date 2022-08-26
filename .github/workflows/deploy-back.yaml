@@ -6,11 +6,15 @@ on:
     # paths:
     # - 'back-end/**'
 jobs:
-  deploy-code:
+  deploy-back:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory:
+          'back-end'
     steps:
     - uses: actions/checkout@v3
-    - run: ./CI/prepare-ssh-keys.sh
+    # - run: ./CI/prepare-ssh-keys.sh
       # env:
       #   SERVER_PRIVATE_SSH_KEY: ${{ secrets.SERVER_PRIVATE_SSH_KEY }}
       #   SERVER_IP: ${{ secrets.SERVER_IP }}
