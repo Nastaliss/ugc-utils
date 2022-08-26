@@ -18,7 +18,7 @@ jobs:
       # env:
       #   SERVER_PRIVATE_SSH_KEY: ${{ secrets.SERVER_PRIVATE_SSH_KEY }}
       #   SERVER_IP: ${{ secrets.SERVER_IP }}
-    - run: ./CI/deploy-back.sh
+    - run: ../CI/deploy-back.sh
       env:
         SERVER_PRIVATE_SSH_KEY: ${{ secrets.SERVER_PRIVATE_SSH_KEY }}
         SERVER_IP: ${{ secrets.SERVER_IP }}
