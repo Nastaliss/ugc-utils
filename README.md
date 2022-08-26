@@ -11,3 +11,6 @@ Une carte est disponible à [cette url](http://ugc.bruhie.re/)
 ### Fonctionnement
 
 La liste des cinémas est récuperé en utilisant BeautifulSoup directement depuis l'html de la page. Ces adresses sont comparées avec la [base nationale de data.gouv](https://adresse.data.gouv.fr/donnees-nationales), pour les adresses francaises.
+
+Une API [Flask](https://flask.palletsprojects.com/en/2.2.x/) est exposée pour renvoyer le nom des cinémas et leurs coordonnées.
+Ceux-ci sont récupérés par un front-end [React](https://reactjs.org/) qui affiche les coordonnées sur une carte.
