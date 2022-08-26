@@ -30,4 +30,3 @@ echo -e "Deployed, building and starting"
 ssh -o strictHostKeyChecking=no -o PubkeyAuthentication=yes "$CONNECTION" "$RUN_CMD"
 
 echo -e "Started"
-
