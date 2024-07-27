@@ -6,7 +6,6 @@ on:
     paths:
     - 'front-end/**'
     - '.github/workflows/deploy-front.yaml'
-    - 'CI/deploy-front.sh'
 jobs:
   deploy-front:
     defaults:
@@ -15,12 +14,15 @@ jobs:
           'front-end'
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    # - run: ./CI/prepare-ssh-keys.sh
-    #   env:
-    #     SERVER_PRIVATE_SSH_KEY: ${{ secrets.SERVER_PRIVATE_SSH_KEY }}
-    #     SERVER_IP: ${{ secrets.SERVER_IP }}
-    - run: ../CI/deploy-front.sh
-      env:
-        SERVER_PRIVATE_SSH_KEY: ${{ secrets.SERVER_PRIVATE_SSH_KEY }}
-        SERVER_IP: ${{ secrets.SERVER_IP }}
+    - uses: actions/checkout@v4
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Build and push
+      uses: docker/build-push-action@v6
+      with:
+        push: true
+        tags: nastaliss/ugc-utils-frontend:${{ github.sha }}
