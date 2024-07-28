@@ -1,0 +1,9 @@
+services:
+  web:
+    image: nastaliss/ugc-utils-frontend:<sha>
+    ports:
+      - 3000:80
+  api:
+    image: nastaliss/ugc-utils-backend:<sha>
+    ports:
+      - 3001:5000
