@@ -10,8 +10,7 @@ jobs:
   deploy-back:
     defaults:
       run:
-        working-directory:
-          'back-end'
+        working-directory: 'back-end'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,6 +20,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - run: ls
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
