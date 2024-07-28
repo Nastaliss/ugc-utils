@@ -10,8 +10,7 @@ jobs:
   deploy-front:
     defaults:
       run:
-        working-directory:
-          'front-end'
+        working-directory: 'front-end'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -26,3 +25,4 @@ jobs:
       with:
         push: true
         tags: nastaliss/ugc-utils-frontend:${{ github.sha }}
+        context: front-end
